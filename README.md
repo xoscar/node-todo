@@ -5,7 +5,7 @@ Otel Instrumented Node.js with Tracetest used to showcase how easy is to start i
 execute `make run`
 
 ## What endpoint should I use for the Tracetest tests? 
-http://host.docker.internal:3000
+http://host.docker.internal:8081
 
 ## Requirements
 - Docker

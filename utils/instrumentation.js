@@ -11,9 +11,11 @@ const { NodeSDK, api } = require("@opentelemetry/sdk-node");
 // const { diag, DiagConsoleLogger, DiagLogLevel } = require('@opentelemetry/api');
 // diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 
-dotEnv.config({
-  path: resolve(__dirname, "../.env"),
-});
+if (process.env.NODE_ENV !== "production") {
+  dotEnv.config({
+    path: resolve(__dirname, "../.env"),
+  });
+}
 
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(),

@@ -6,3 +6,7 @@ execute `make run`
 
 ## What endpoint should I use for the Tracetest tests? 
 http://host.docker.internal:3000
+
+## Requirements
+- Docker
+- Docker compose

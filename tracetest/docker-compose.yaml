@@ -1,0 +1,109 @@
+services:
+    jaeger:
+        healthcheck:
+            test:
+                - CMD
+                - wget
+                - --spider
+                - localhost:16686
+            timeout: 3s
+            interval: 1s
+            retries: 60
+        image: jaegertracing/all-in-one:latest
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 16686
+              published: "16686"
+              protocol: tcp
+            - mode: ingress
+              target: 16685
+              published: "16685"
+              protocol: tcp
+            - mode: ingress
+              target: 6831
+              published: "6831"
+              protocol: udp
+            - mode: ingress
+              target: 6832
+              published: "6832"
+              protocol: udp
+        restart: unless-stopped
+    otel-collector:
+        command:
+            - --config
+            - /otel-local-config.yaml
+        depends_on:
+            jaeger:
+                condition: service_healthy
+        environment:
+            JAEGER_ENDPOINT: jaeger:14250
+        image: otel/opentelemetry-collector:0.54.0
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 55679
+              published: "55679"
+              protocol: tcp
+            - mode: ingress
+              target: 4317
+              published: "4317"
+              protocol: tcp
+            - mode: ingress
+              target: 8888
+              published: "8888"
+              protocol: tcp
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: otel-collector.yaml
+              target: /otel-local-config.yaml
+              bind:
+                create_host_path: true
+    postgres:
+        environment:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_USER: postgres
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+            timeout: 5s
+            interval: 1s
+            retries: 60
+        image: postgres
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 5432
+              published: "5432"
+              protocol: tcp
+    tracetest:
+        depends_on:
+            jaeger:
+                condition: service_healthy
+            otel-collector:
+                condition: service_started
+            postgres:
+                condition: service_healthy
+        extra_hosts:
+            host.docker.internal: host-gateway
+        image: kubeshop/tracetest:v0.6.7
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 8080
+              published: "8080"
+              protocol: tcp
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: tracetest.yaml
+              target: /app/config.yaml
+networks:
+    default:
+        name: _default

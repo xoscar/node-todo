@@ -1,0 +1,26 @@
+server:
+    telemetry:
+        exporter: collector
+        applicationexporter: collector
+        datastore: jaeger
+postgresconnstring: host=postgres user=postgres password=postgres port=5432 sslmode=disable
+poolingconfig:
+    maxwaittimefortrace: 2m
+    retrydelay: 1s
+telemetry:
+    datastores:
+        jaeger:
+            type: jaeger
+            jaeger:
+                endpoint: jaeger:16685
+                compression: ""
+                tls:
+                    insecure: true
+    exporters:
+        collector:
+            servicename: tracetest
+            sampling: 100
+            exporter:
+                type: collector
+                collector:
+                    endpoint: otel-collector:4317

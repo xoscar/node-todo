@@ -20,7 +20,11 @@ if (process.env.NODE_ENV !== "production") {
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(),
   // traceExporter: new ConsoleSpanExporter(),
-  instrumentations: getNodeAutoInstrumentations(),
+  instrumentations: getNodeAutoInstrumentations({
+    "@opentelemetry/instrumentation-express": {
+      enabled: false,
+    }
+  }),
 });
 
 sdk.start();

@@ -3,3 +3,6 @@ up:
 
 down:
 	docker compose -f docker-compose.yaml -f tracetest/docker-compose.yaml down
+
+build:
+	docker compose -f docker-compose.yaml -f tracetest/docker-compose.yaml build

@@ -58,7 +58,7 @@ services:
         restart: unless-stopped
         volumes:
             - type: bind
-              source: otel-collector.yaml
+              source: ./tracetest/otel-collector.yaml
               target: /otel-local-config.yaml
               bind:
                 create_host_path: true
@@ -102,7 +102,7 @@ services:
         restart: unless-stopped
         volumes:
             - type: bind
-              source: tracetest.yaml
+              source: ./tracetest/tracetest.yaml
               target: /app/config.yaml
 networks:
     default:

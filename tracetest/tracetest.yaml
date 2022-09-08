@@ -15,7 +15,22 @@ telemetry:
                 endpoint: jaeger:16685
                 compression: ""
                 tls:
+                    tlssetting:
+                        cafile: ""
+                        certfile: ""
+                        keyfile: ""
+                        minversion: ""
+                        maxversion: ""
                     insecure: true
+                    insecureskipverify: true
+                    servername: ""
+                keepalive: null
+                readbuffersize: 0
+                writebuffersize: 0
+                waitforready: false
+                headers: {}
+                balancername: ""
+                auth: null
     exporters:
         collector:
             servicename: tracetest

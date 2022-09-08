@@ -1,6 +1,6 @@
 exporters:
     jaeger:
-        endpoint: jaeger:16685
+        endpoint: jaeger:14250
         tls:
             insecure: true
 processors:
